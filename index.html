@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Harsh Arcade</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#061827;color:#fff;font-family:Arial,sans-serif}
+.app{max-width:430px;margin:auto;min-height:100vh;background:linear-gradient(#073b45,#041522);overflow:hidden}
+.top{padding:12px;display:flex;justify-content:space-between;align-items:center;background:#073b3d;border-bottom:2px solid #19d9b0}
+.logo{font-size:24px;font-weight:900;color:#ffd84d}.coins{background:#092d32;border:2px solid #f2bd3c;border-radius:22px;padding:8px 14px}
+.hero{margin:14px;border:2px solid #e9b93d;border-radius:18px;padding:18px;text-align:center;background:linear-gradient(145deg,#075b4d,#0a2737)}
+.hero h1{margin:0;color:#ffe45c;font-size:34px}.hero p{margin:7px 0;color:#d7fff5}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px}
+button{min-height:44px;border:0;border-radius:12px;font-weight:800;cursor:pointer}
+.tab{background:#0c5660;color:#bfffee;border:1px solid #18c9a5}.tab.active{background:#10b978;color:white}
+.panel{padding:10px}.card{background:#07323d;border:1px solid #159b88;border-radius:16px;padding:14px;margin-bottom:12px}
+.game{display:grid;grid-template-columns:1fr 1fr;gap:10px}.game button{height:110px;color:#fff;font-size:18px;background:linear-gradient(145deg,#146f65,#092c3d);border:2px solid #d5a72f}
+.big{width:100%;background:#10b978;color:#fff;margin-top:8px}.danger{background:#b83b45;color:#fff}.muted{color:#a9c8c6;font-size:13px}
+.task{display:flex;justify-content:space-between;gap:10px;align-items:center}.task button{padding:8px 12px;background:#dcae32;color:#071b22}
+.nav{position:sticky;bottom:0;background:#06242d;border-top:2px solid #159b88;display:grid;grid-template-columns:repeat(4,1fr);padding:8px;gap:5px}.nav button{background:transparent;color:#bfffee}
+.notice{padding:10px;border-radius:12px;background:#1a3c45;color:#ffe66d;font-size:13px}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #218f82;background:#061f2a;color:#fff;margin:5px 0 10px}
+</style></head>
+<body><div class="app">
+<div class="top"><div class="logo">HARSH ARCADE</div><div class="coins">🪙 <span id="coins">1200</span></div></div>
+<section class="hero"><h1>🎮 ARCADE</h1><p>Play • Earn virtual coins • Complete tasks</p><div class="notice">No deposits, betting or real-money withdrawals.</div></section>
+<div class="tabs"><button class="tab active" data-tab="games">GAMES</button><button class="tab" data-tab="tasks">TASKS</button><button class="tab" data-tab="profile">PROFILE</button></div>
+<main class="panel">
+<section id="games" class="page">
+<div class="card"><h2>🔥 Mini Games</h2><div class="game">
+<button data-game="Lucky Spin">🎡<br>Lucky Spin</button>
+<button data-game="Rocket Tap">🚀<br>Rocket Tap</button>
+<button data-game="Card Match">🃏<br>Card Match</button>
+<button data-game="Treasure">💎<br>Treasure</button>
+</div></div>
+<div class="card"><h2>🏆 Daily Reward</h2><p class="muted">Claim once per day.</p><button class="big" id="daily">CLAIM +100 COINS</button></div>
+</section>
+<section id="tasks" class="page" hidden>
+<div class="card"><h2>🎯 Tasks</h2>
+<div class="task"><div><b>Daily Play</b><br><span class="muted">Play 3 mini games</span></div><button data-reward="50">+50</button></div><hr>
+<div class="task"><div><b>Score Master</b><br><span class="muted">Reach 500 points</span></div><button data-reward="75">+75</button></div><hr>
+<div class="task"><div><b>Explorer</b><br><span class="muted">Open every game</span></div><button data-reward="100">+100</button></div>
+</div></section>
+<section id="profile" class="page" hidden>
+<div class="card"><h2>👤 Profile</h2><label>Nickname</label><input id="name" value="Harsh"><p>Virtual balance: <b><span id="pcoins">1200</span> coins</b></p><button class="big" id="save">SAVE PROFILE</button></div>
+<div class="card"><h3>🔒 Safety</h3><p class="muted">This demo uses virtual points only. It does not accept deposits, wagers, or cash withdrawals.</p></div>
+</section>
+</main>
+<div class="nav"><button data-tab="games">🎮<br>Games</button><button data-tab="tasks">🎯<br>Tasks</button><button data-tab="profile">👤<br>Profile</button><button id="reset">↻<br>Reset</button></div>
+</div>
+<script>
+let coins=1200, played=new Set();
+const c=()=>{document.querySelector('#coins').textContent=coins;document.querySelector('#pcoins').textContent=coins}
+function tab(n){document.querySelectorAll('.page').forEach(x=>x.hidden=x.id!==n);document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===n))}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.tab)));
+document.querySelectorAll('[data-game]').forEach(b=>b.addEventListener('click',()=>{played.add(b.dataset.game);let reward=20+Math.floor(Math.random()*81);coins+=reward;c();alert(b.dataset.game+' complete! +'+reward+' virtual coins');}));
+document.querySelector('#daily').addEventListener('click',e=>{if(e.disabled)return;e.disabled=true;coins+=100;c();e.textContent='CLAIMED ✓'});
+document.querySelectorAll('[data-reward]').forEach(b=>b.addEventListener('click',()=>{coins+=Number(b.dataset.reward);c();b.disabled=true;b.textContent='CLAIMED ✓'}));
+document.querySelector('#save').addEventListener('click',()=>alert('Profile saved on this demo.'));
+document.querySelector('#reset').addEventListener('click',()=>{coins=1200;played.clear();c();location.reload()});c();
+</script></body></html>
